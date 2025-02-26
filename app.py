@@ -5,6 +5,26 @@ from flask_cors import CORS
 from flask_mail import Mail, Message
 from dotenv import load_dotenv
 import os
+from flask_xcaptcha import XCaptcha
+from flask import request
+
+@app.route('/submit', methods=['POST'])
+def submit():
+    if xcaptcha.verify():
+        # reCAPTCHA byla úspěšně ověřena
+        # Zpracuj data formuláře
+        pass
+    else:
+        # reCAPTCHA ověření selhalo
+        # Informuj uživatele nebo proveď jiné akce
+        pass
+
+app = Flask(__name__)
+app.config.update(
+    XCAPTCHA_SITE_KEY='6LfTReMqAAAAAJa5oyYSVMAO8rzDb_C4iClD4tMt',
+    XCAPTCHA_SECRET_KEY='6LfTReMqAAAAAOtY5mjv02tCWQgjMZ1I5l2ky6XI'
+)
+xcaptcha = XCaptcha(app=app)
 
 # ✅ Načtení proměnných z .env souboru
 load_dotenv()
