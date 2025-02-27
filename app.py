@@ -6,31 +6,20 @@ from flask_mail import Mail, Message
 from dotenv import load_dotenv
 import os
 from flask_xcaptcha import XCaptcha
-from flask import request
-
-@app.route('/submit', methods=['POST'])
-def submit():
-    if xcaptcha.verify():
-        # reCAPTCHA byla úspěšně ověřena
-        # Zpracuj data formuláře
-        pass
-    else:
-        # reCAPTCHA ověření selhalo
-        # Informuj uživatele nebo proveď jiné akce
-        pass
-
-app = Flask(__name__)
-app.config.update(
-    XCAPTCHA_SITE_KEY='6LfTReMqAAAAAJa5oyYSVMAO8rzDb_C4iClD4tMt',
-    XCAPTCHA_SECRET_KEY='6LfTReMqAAAAAOtY5mjv02tCWQgjMZ1I5l2ky6XI'
-)
-xcaptcha = XCaptcha(app=app)
 
 # ✅ Načtení proměnných z .env souboru
 load_dotenv()
 
+# ✅ Inicializace aplikace Flask
 app = Flask(__name__)
 CORS(app)
+
+# ✅ Konfigurace Flask-XCaptcha
+app.config.update(
+    XCAPTCHA_SITE_KEY='6LfTReMqAAAAAJa5oyYSVMAO8rzDb_C4iClD4tMt',
+    XCAPTCHA_SECRET_KEY='6LfTReMqAAAAAOtY5mjv02tCWQgjMZ1I5l2ky6XI'
+)
+xcaptcha = XCaptcha(app)
 
 # ✉️ Konfigurace Flask-Mail (Gmail SMTP)
 app.config["MAIL_SERVER"] = os.getenv("MAIL_SERVER")
@@ -56,16 +45,15 @@ def init_db():
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             )
         ''')
-
 init_db()
 
 # ✅ Validace e-mailu
 def is_valid_email(email):
-    return re.match(r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$", email)
+    return re.match(r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$", email)
 
 # ✅ Validace telefonního čísla
 def is_valid_phone(phone):
-    return re.match(r"^\\+420\\d{9}$|^\\d{9}$", phone)
+    return re.match(r"^\+420\d{9}$|^\d{9}$", phone)
 
 # 🌱 Pomocné funkce pro odpovědi
 def success_response(message):
@@ -119,6 +107,15 @@ def submit_form():
     except Exception as e:
         return error_response(str(e), 500)
 
+# ✅ endpoint pro reCAPTCHA
+@app.route('/submit', methods=['POST'])
+def submit():
+    if xcaptcha.verify():
+        # reCAPTCHA byla úspěšně ověřena
+        return success_response("reCAPTCHA byla úspěšně ověřena!")
+    else:
+        # reCAPTCHA ověření selhalo
+        return error_response("Ověření reCAPTCHA selhalo!")
+
 if __name__ == '__main__':
     app.run(debug=True)
-
