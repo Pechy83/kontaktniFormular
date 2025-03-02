@@ -10955,7 +10955,7 @@ header.masthead {
   padding-bottom: 6rem;
   text-align: center;
   color: #000;
-  background-image: url("../img/WebP/_FOT3241\ \(1\).webp");
+  background-image: url("/static/images/_FOT3241.webp");
   background-repeat: no-repeat;
   background-attachment: scroll;
   background-position: center center;
@@ -11265,7 +11265,7 @@ header.masthead .masthead-heading {
 
 section#contact {
   background-color: #005;
-  background-image: url("../img/map-image.png");
+  background-image: url("/static/images/map-image.png");
   background-repeat: no-repeat;
   background-position: center;
 }
