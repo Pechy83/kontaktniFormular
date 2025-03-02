@@ -1,12 +1,13 @@
-import sqlite3
+import os
 import re
-from flask import Flask, request, jsonify
+import sqlite3
+
+from dotenv import load_dotenv
+from flask import Flask, request, jsonify, render_template
 from flask_cors import CORS
 from flask_mail import Mail, Message
-from dotenv import load_dotenv
-import os
 from flask_xcaptcha import XCaptcha
-from flask import Flask, render_template
+
 
 # ✅ Načtení proměnných z .env souboru
 load_dotenv()
@@ -17,8 +18,8 @@ CORS(app)
 
 # ✅ Konfigurace Flask-XCaptcha
 app.config.update(
-    XCAPTCHA_SITE_KEY='6LfTReMqAAAAAJa5oyYSVMAO8rzDb_C4iClD4tMt',
-    XCAPTCHA_SECRET_KEY='6LfTReMqAAAAAOtY5mjv02tCWQgjMZ1I5l2ky6XI'
+    XCAPTCHA_SITE_KEY=os.getenv("RECAPTCHA_SITE_KEY"),
+    XCAPTCHA_SECRET_KEY=os.getenv("RECAPTCHA_SECRET_KEY")
 )
 xcaptcha = XCaptcha(app)
 
@@ -119,8 +120,14 @@ def submit():
         return error_response("Ověření reCAPTCHA selhalo!")
 
 @app.route('/')
-def home():
+def index():
     return render_template('index.html')
+
+mail_port = os.getenv("MAIL_PORT")
+if mail_port:
+    app.config["MAIL_PORT"] = int(mail_port)
+else:
+    app.config["MAIL_PORT"] = 587  # Výchozí port
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
