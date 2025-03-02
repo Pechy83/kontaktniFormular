@@ -7,6 +7,7 @@ from flask import Flask, request, jsonify, render_template
 from flask_cors import CORS
 from flask_mail import Mail, Message
 from flask_xcaptcha import XCaptcha
+from flask import send_from_directory
 
 
 # ✅ Načtení proměnných z .env souboru
@@ -122,6 +123,10 @@ def submit():
 @app.route('/')
 def index():
     return render_template('index.html')
+
+@app.route('/static/<path:filename>')
+def static_files(filename):
+    return send_from_directory('static', filename)
 
 mail_port = os.getenv("MAIL_PORT")
 if mail_port:
