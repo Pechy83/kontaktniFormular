@@ -139,9 +139,6 @@ else:
 
 #rezence z Google
 
-
-# Zpracování odpovědi zde
-
 @app.route('/reviews', methods=['GET'])
 def get_reviews():
     # Sestavení URL pro Google Places API
