@@ -3,11 +3,12 @@ import re
 import sqlite3
 
 from dotenv import load_dotenv
-from flask import Flask, jsonify, render_template, request, datetime
+from flask import Flask, jsonify, render_template, request
 from flask_cors import CORS
 from flask_mail import Mail, Message
 from flask_xcaptcha import XCaptcha
 from whitenoise import WhiteNoise
+from datetime import datetime
 
 # ✅ Načtení proměnných z .env souboru
 load_dotenv()
