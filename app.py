@@ -8,6 +8,7 @@ from flask_cors import CORS
 from flask_mail import Mail, Message
 from flask_xcaptcha import XCaptcha
 from flask import send_from_directory
+from whitenoise import WhiteNoise
 
 
 # ✅ Načtení proměnných z .env souboru
@@ -124,9 +125,10 @@ def submit():
 def index():
     return render_template('index.html')
 
-@app.route('/static/<path:filename>')
-def static_files(filename):
-    return send_from_directory('static', filename)
+# Konfigurace WhiteNoise
+app.wsgi_app = WhiteNoise(app.wsgi_app, root='static/')
+app.wsgi_app.add_files('js/', prefix='js/')
+app.wsgi_app.add_files('images/', prefix='images/')
 
 mail_port = os.getenv("MAIL_PORT")
 if mail_port:
