@@ -3,7 +3,7 @@ import re
 import sqlite3
 
 from dotenv import load_dotenv
-from flask import Flask, request, jsonify, render_template
+from flask import Flask, jsonify, render_template, request, datetime
 from flask_cors import CORS
 from flask_mail import Mail, Message
 from flask_xcaptcha import XCaptcha
@@ -13,7 +13,7 @@ from whitenoise import WhiteNoise
 load_dotenv()
 
 # ✅ Inicializace aplikace Flask
-app = Flask(__name__, static_folder='static')
+app = Flask(__name__)
 CORS(app)
 
 # ✅ Konfigurace Flask-XCaptcha
@@ -22,6 +22,10 @@ app.config.update(
     XCAPTCHA_SECRET_KEY=os.getenv("RECAPTCHA_SECRET_KEY")
 )
 xcaptcha = XCaptcha(app)
+
+# API klíč a Place ID z environmentálních proměnných
+GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
+PLACE_ID = os.getenv("PLACE_ID")
 
 # ✉️ Konfigurace Flask-Mail (Gmail SMTP)
 app.config["MAIL_SERVER"] = os.getenv("MAIL_SERVER")
@@ -132,6 +136,44 @@ if mail_port:
     app.config["MAIL_PORT"] = int(mail_port)
 else:
     app.config["MAIL_PORT"] = 587  # Výchozí port
+
+#rezence z Google
+
+
+# Zpracování odpovědi zde
+
+@app.route('/reviews', methods=['GET'])
+def get_reviews():
+    # Sestavení URL pro Google Places API
+    url = f"https://maps.googleapis.com/maps/api/place/details/json?place_id={PLACE_ID}&fields=name,reviews,rating&key={GOOGLE_API_KEY}"
+
+    try:
+        # Odeslání GET požadavku
+        response = requests.get(url)
+        data = response.json()
+
+        # Kontrola, jestli je odpověď správná
+        if response.status_code != 200:
+            return jsonify({"error": "Chyba při načítání dat z Google Places API"}), response.status_code
+
+        # Zpracování recenzí
+        if "result" in data and "reviews" in data["result"]:
+            reviews = [
+                {
+                    "author": review["author_name"],
+                    "text": review["text"],
+                    "rating": review["rating"],
+                    "date": datetime.datetime.utcfromtimestamp(review["time"]).strftime('%Y-%m-%d %H:%M:%S')
+                }
+                for review in data["result"]["reviews"]
+            ]
+            return jsonify(reviews)
+
+        return jsonify({"error": "No reviews found"}), 404
+
+    except requests.exceptions.RequestException as e:
+        # Chyby spojené s požadavkem
+        return jsonify({"error": str(e)}), 500
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)

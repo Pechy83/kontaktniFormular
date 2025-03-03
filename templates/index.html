@@ -213,6 +213,38 @@
                                 inspirovat!
                             </h4>
                         </div>
+                        <div class="timeline-body"><p class="text-muted"><h1>Recenze zákazníků</h1></div>
+                        <script>
+                            // Funkce pro získání a zobrazení recenzí
+                            fetch("/reviews")
+                                .then(response => response.json())
+                                .then(data => {
+                                    if (data.error) {
+                                        document.getElementById('reviews').innerHTML = `<p>Chyba: ${data.error}</p>`;
+                                    } else {
+                                        let reviewsContainer = document.getElementById("reviews");
+                                        data.forEach(review => {
+                                            let reviewElement = document.createElement("div");
+                                            reviewElement.classList.add("review");
+                    
+                                            // Vytvoření HTML obsahu pro každou recenzi
+                                            reviewElement.innerHTML = `
+                                                <h3>${review.author}</h3>
+                                                <p>${review.text}</p>
+                                                <p class="rating">Hodnocení: ${review.rating} / 5</p>
+                                                <p class="date">Datum: ${review.date}</p>
+                                            `;
+                    
+                                            // Přidání recenze do kontejneru
+                                            reviewsContainer.appendChild(reviewElement);
+                                        });
+                                    }
+                                })
+                                .catch(error => {
+                                    document.getElementById('reviews').innerHTML = `<p>Chyba při načítání recenzí.</p>`;
+                                });
+                        </script>
+                    </div>
                     </li>
                 </ul>
             </div>
