@@ -7,9 +7,7 @@ from flask import Flask, request, jsonify, render_template
 from flask_cors import CORS
 from flask_mail import Mail, Message
 from flask_xcaptcha import XCaptcha
-from flask import send_from_directory
 from whitenoise import WhiteNoise
-
 
 # ✅ Načtení proměnných z .env souboru
 load_dotenv()
@@ -115,11 +113,10 @@ def submit_form():
 @app.route('/submit', methods=['POST'])
 def submit():
     if xcaptcha.verify():
-        # reCAPTCHA byla úspěšně ověřena
-        return success_response("reCAPTCHA byla úspěšně ověřena!")
+        return jsonify({"success": True, "message": "reCAPTCHA byla úspěšně ověřena!"}), 200
     else:
-        # reCAPTCHA ověření selhalo
-        return error_response("Ověření reCAPTCHA selhalo!")
+        print("❌ reCAPTCHA ověření selhalo!")  # Debug info do logu
+        return jsonify({"success": False, "message": "Ověření reCAPTCHA selhalo!"}), 400
 
 @app.route('/')
 def index():
