@@ -148,7 +148,7 @@ def get_reviews():
     if not GOOGLE_API_KEY or not PLACE_ID:
         return jsonify({"error": "Chybí API klíč nebo PLACE ID"}), 500
     # Sestavení URL pro Google Places API
-    url = f"https://maps.googleapis.com/maps/api/place/details/json?place_id={PLACE_ID}&fields=name,reviews,rating&key={GOOGLE_API_KEY}"
+    url = f"https://maps.googleapis.com/maps/api/place/details/json?place_id={PLACE_ID}&fields=name,reviews,rating&key={GOOGLE_API_KEY}&language=cs"
 
     try:
         # Odeslání GET požadavku
