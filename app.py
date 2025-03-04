@@ -1,6 +1,7 @@
 import os
 import re
 import sqlite3
+import mimetypes
 
 from dotenv import load_dotenv
 from flask import Flask, jsonify, render_template, request
@@ -18,6 +19,8 @@ load_dotenv()
 # ✅ Inicializace aplikace Flask
 app = Flask(__name__, static_folder='static')
 CORS(app)
+
+mimetypes.add_type('image/webp', '.webp')
 
 # ✅ Konfigurace Flask-XCaptcha
 app.config.update(
