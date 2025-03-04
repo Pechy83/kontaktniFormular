@@ -9,6 +9,7 @@ from flask_mail import Mail, Message
 from flask_xcaptcha import XCaptcha
 from whitenoise import WhiteNoise
 from datetime import datetime
+import requests
 
 # ✅ Načtení proměnných z .env souboru
 load_dotenv()
@@ -142,6 +143,9 @@ else:
 
 @app.route('/reviews', methods=['GET'])
 def get_reviews():
+    # Kontrola, zda jsou API klíč a PLACE_ID nastaveny
+    if not GOOGLE_API_KEY or not PLACE_ID:
+        return jsonify({"error": "Chybí API klíč nebo PLACE ID"}), 500
     # Sestavení URL pro Google Places API
     url = f"https://maps.googleapis.com/maps/api/place/details/json?place_id={PLACE_ID}&fields=name,reviews,rating&key={GOOGLE_API_KEY}"
 
@@ -161,7 +165,7 @@ def get_reviews():
                     "author": review["author_name"],
                     "text": review["text"],
                     "rating": review["rating"],
-                    "date": datetime.datetime.utcfromtimestamp(review["time"]).strftime('%Y-%m-%d %H:%M:%S')
+                    "date": datetime.datetime.utcfromtimestamp(review.get("time", 0)).strftime('%Y-%m-%d %H:%M:%S')
                 }
                 for review in data["result"]["reviews"]
             ]
@@ -171,7 +175,7 @@ def get_reviews():
 
     except requests.exceptions.RequestException as e:
         # Chyby spojené s požadavkem
-        return jsonify({"error": str(e)}), 500
+        return jsonify({"error": f"Chyba sítě: {str(e)}"}), 500
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)

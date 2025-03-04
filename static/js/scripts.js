@@ -53,7 +53,7 @@ window.addEventListener('DOMContentLoaded', event => {
 
 });
 
-let response = await fetch("/submit_form", { // Odstranění "http://127.0.0.1:5000"
+let response = await fetch("https://kontaktni-formular-90c92756f50f.herokuapp.com/submit_form", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(formData)

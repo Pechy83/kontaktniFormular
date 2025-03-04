@@ -105,7 +105,7 @@
                                 <div class="portfolio-caption-subheading text-muted">Illustration</div>
                             </div>
                         </div>
-                    </div>
+                    </div> 
                     <div class="col-lg-4 col-sm-6 mb-4">
                         <!-- Portfolio item 2-->
                         <div class="portfolio-item">
@@ -209,40 +209,44 @@
                         </div>
                         <div class="timeline-panel">
                             <div class="timeline-heading">
-                            <h4>Recenze z Google</h4>
-                        <div class="timeline-body"><p class="text-muted" id="reviews">
-                        </div>      
+                                <h4>Recenze z Google</h4>
+                            </div>
+                            <div class="timeline-body">
+                                <p class="text-muted" id="reviews"></p>
+                            </div>
+                        </div>
                     </li>
-                            <script>
-                                // Funkce pro získání a zobrazení recenzí
-                                fetch("/reviews")
-                                    .then(response => response.json())
-                                    .then(data => {
-                                        if (data.error) {
-                                            document.getElementById('reviews').innerHTML = `<p>Chyba: ${data.error}</p>`;
-                                        } else {
-                                            let reviewsContainer = document.getElementById("reviews");
-                                            data.forEach(review => {
-                                                let reviewElement = document.createElement("div");
-                                                reviewElement.classList.add("review");
-                        
-                                                // Vytvoření HTML obsahu pro každou recenzi
-                                                reviewElement.innerHTML = `
-                                                    <h3>${review.author}</h3>
-                                                    <p>${review.text}</p>
-                                                    <p class="rating">Hodnocení: ${review.rating} / 5</p>
-                                                    <p class="date">Datum: ${review.date}</p>
-                                                `;
-                        
-                                                // Přidání recenze do kontejneru
-                                                reviewsContainer.appendChild(reviewElement);
-                                            });
-                                        }
-                                    })
-                                    .catch(error => {
-                                        document.getElementById('reviews').innerHTML = `<p>Chyba při načítání recenzí.</p>`;
+                    <script>
+                        // Funkce pro získání a zobrazení recenzí
+                        fetch("https://kontaktni-formular-90c92756f50f.herokuapp.com/reviews")
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.error) {
+                                    document.getElementById('reviews').innerHTML = `<p>Chyba: ${data.error}</p>`;
+                                } else {
+                                    let reviewsContainer = document.getElementById("reviews");
+                                    reviewsContainer.innerHTML = ""; // Vyčistíme předchozí obsah
+
+                                    data.forEach(review => {
+                                        let reviewElement = document.createElement("div");
+                                        reviewElement.classList.add("review");
+
+                                        reviewElement.innerHTML = `
+                                            <h3>${review.author}</h3>
+                                            <p>${review.text}</p>
+                                            <p class="rating">Hodnocení: ${review.rating} / 5</p>
+                                            <p class="date">Datum: ${new Date(review.date).toLocaleDateString()}</p>
+                                        `;
+
+                                        reviewsContainer.appendChild(reviewElement);
                                     });
-                            </script>
+                                }
+                            })
+                            .catch(error => {
+                                document.getElementById('reviews').innerHTML = `<p>Chyba při načítání recenzí.</p>`;
+                                console.error("Chyba při načítání recenzí:", error);
+                            });
+                    </script>
                     </li>
                 </ul>
             </div>
