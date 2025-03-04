@@ -8,14 +8,15 @@ from flask_cors import CORS
 from flask_mail import Mail, Message
 from flask_xcaptcha import XCaptcha
 from whitenoise import WhiteNoise
-from datetime import datetime
+import datetime
 import requests
+import pytz
 
 # ✅ Načtení proměnných z .env souboru
 load_dotenv()
 
 # ✅ Inicializace aplikace Flask
-app = Flask(__name__)
+app = Flask(__name__, static_folder='static')
 CORS(app)
 
 # ✅ Konfigurace Flask-XCaptcha
@@ -165,7 +166,7 @@ def get_reviews():
                     "author": review["author_name"],
                     "text": review["text"],
                     "rating": review["rating"],
-                    "date": datetime.datetime.utcfromtimestamp(review.get("time", 0)).strftime('%Y-%m-%d %H:%M:%S')
+                    "date": datetime.datetime.fromtimestamp(review.get("time", 0), tz=pytz.utc).strftime('%Y-%m-%d %H:%M:%S')
                 }
                 for review in data["result"]["reviews"]
             ]
@@ -179,3 +180,4 @@ def get_reviews():
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
+
