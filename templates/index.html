@@ -10,8 +10,6 @@
         <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
         <!-- Font Awesome icons (free version)-->
         <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
-         <!-- reCAPTHA-->
-        <script src="https://www.google.com/recaptcha/api.js" async defer></script>
         <!-- Google fonts-->
         <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css" />
         <link href="https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700" rel="stylesheet" type="text/css" />
@@ -360,8 +358,12 @@
                     <div class="alert alert-danger d-none" id="submitErrorMessage">
                         <strong>Chyba při odesílání zprávy!</strong>
                     </div>
-                     <!---{{ xcaptcha }} --->
-                    <div class="g-recaptcha" data-sitekey="6LcDV-UqAAAAAGZs22obYmq9ceKrVCsp5nw2g13H"></div>
+                     <!---{{ xcaptcha }} ---> 
+                    <form action="/submit" method="POST">
+                        <div class="g-recaptcha" data-sitekey="6LcDV-UqAAAAAGZs22obYmq9ceKrVCsp5nw2g13H"></div>
+                        <br>
+                        <input type="submit" value="Odeslat">
+                    </form>
   
                     <!-- Submit Button -->
                     <div class="text-center">
@@ -609,7 +611,8 @@ document.getElementById("contactForm").addEventListener("submit", async function
         <!-- * * Activate your form at https://startbootstrap.com/solution/contact-forms * *-->
         <!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *-->
         <script src="https://cdn.startbootstrap.com/sb-forms-latest.js"></script>
-            
+        <!-- reCAPTHA-->
+        <script src="https://www.google.com/recaptcha/api.js" async defer></script>    
     </body>
 </html>
 
