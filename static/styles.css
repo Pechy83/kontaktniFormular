@@ -10901,6 +10901,9 @@ p {
   font-weight: 700;
   letter-spacing: 0.0625em;
   text-transform: uppercase;
+  color: black !important;
+  border-color: black;
+  border-width: 4px;
 }
 #mainNav .navbar-brand img {
   height: 5rem;
@@ -11265,7 +11268,7 @@ header.masthead .masthead-heading {
 
 section#contact {
   background-color: #005;
-  background-image: url("../static/images/map-image.avif");
+  background-image: url("../static/images/map-image.jpg");
   background-repeat: no-repeat;
   background-position: center;
 }
