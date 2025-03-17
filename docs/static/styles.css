@@ -10883,9 +10883,8 @@ p {
   border-radius: 100%;
 }
 
-#mainNav {
-  padding: 1rem 0;
-  background-color: rgba(211, 211, 211, 0.8);
+#mainNav { 
+  background-color: rgba(211, 211, 211, 0.95);
   transition: background-color 0.3s ease-in-out;
 }
 #mainNav .navbar-toggler {
@@ -10920,10 +10919,8 @@ p {
 
 @media (min-width: 992px) {
   #mainNav {
-    padding-top: 1.5rem;
-    padding-bottom: 1.5rem;
     border: none;
-    background-color: rgba(211, 211, 211, 0.8);
+    background-color: rgba(211, 211, 211, 0.97);
     transition: padding-top 0.3s ease-in-out, padding-bottom 0.3s ease-in-out;
   }
   #mainNav .navbar-brand {
@@ -10960,7 +10957,7 @@ header.masthead {
   color: #000;
   background-image: url("../static/images/uvod.jpg");
   background-repeat: no-repeat;
-  background-attachment: scroll;
+  background-attachment: fixed;
   background-position: center center;
   background-size: cover;
 }
